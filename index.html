@@ -1,133 +1,599 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>#000000</title>
-    <link type="image/x-icon" rel="shortcut icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAHklEQVQ4T2NkYGD4z0ABYBw1gGE0DBhGw4BhWIQBAE5OEAELnjVHAAAAAElFTkSuQmCC">
+    <title>Enugu Solar Power Initiative - Business Proposal | Sáng kiến Năng lượng Mặt trời Enugu - Đề xuất Kinh doanh</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Neutral Harmony -->
+    <!-- Application Structure Plan: The SPA is designed as a top-down narrative for a potential investor. It starts with a high-level "Why Enugu?" (The Opportunity), drills down into the enabling environment (Policy & Market), presents our solution (Business Model), allows interactive financial exploration (Financial Projections), and concludes with the broader positive outcomes (Impact). This thematic flow is more intuitive for decision-making than a traditional report structure, guiding the user from opportunity to validation to impact. -->
+    <!-- Visualization & Content Choices: 
+        - Key Metrics (Opportunity): Goal: Inform/Impress -> Method: Large stat cards (HTML/CSS) -> Interaction: Hover to show context -> Justification: Quick, digestible highlights for executives.
+        - Cost Comparison (Market): Goal: Compare -> Method: Bar Chart (Chart.js) -> Interaction: Static, but visually compares Solar LCOE vs. new Grid Tariff -> Justification: Directly addresses the core financial advantage.
+        - Financial Projections (Financials): Goal: Analyze/Persuade -> Method: Doughnut and Bar Charts (Chart.js) with dynamic text readouts -> Interaction: A slider allows users to select investment size (system kW), which recalculates and updates all charts and metrics (CAPEX, ROI, Payback) in real-time -> Justification: Empowers investors to model scenarios, making the proposal a tool, not just a document.
+        - Impact Metrics (Impact): Goal: Inform on ESG -> Method: Icon-driven stat cards (HTML/CSS) -> Interaction: Subtle animation on load -> Justification: Clearly communicates the social and environmental returns.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <style>
-        :root {
-            --color: #000000;
-            --color-transparent: #00000022;
-        }
-
-        ::selection {
-            background: var(--color-transparent);
-        }
-
-        html,
-        body {
-            background: var(--color);
-            height: 100%;
-            margin: 0;
-        }
-
-        body {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-        }
-
-        #color {
-            background: white;
-            color: var(--color);
-            font-size: 2.5rem;
-            font-weight: 300;
-            padding: 2.25rem 3rem;
-            font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir, helvetica neue, helvetica, ubuntu, roboto, noto, segoe ui, arial, sans-serif;
-            cursor: text;
-        }
+        body { font-family: 'Inter', sans-serif; background-color: #FDFBF8; color: #3D405B; }
+        .lang-vi [data-lang-en] { display: none; }
+        [data-lang-vi] { display: none; }
+        .lang-vi [data-lang-vi] { display: inline; }
+        .chart-container { position: relative; width: 100%; max-width: 600px; margin-left: auto; margin-right: auto; height: 320px; max-height: 400px; }
+        @media (min-width: 768px) { .chart-container { height: 350px; } }
+        .nav-link { transition: color 0.3s; }
+        .nav-link:hover { color: #81B29A; }
+        .active-nav { color: #81B29A; border-bottom: 2px solid #81B29A; }
+        .stat-card { background-color: #FFFFFF; border: 1px solid #E0E0E0; border-radius: 0.75rem; padding: 1.5rem; text-align: center; transition: transform 0.3s, box-shadow 0.3s; }
+        .stat-card:hover { transform: translateY(-5px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
+        .tab { cursor: pointer; padding: 0.5rem 1rem; border-bottom: 2px solid transparent; }
+        .active-tab { border-bottom-color: #81B29A; color: #3D405B; font-weight: 600; }
     </style>
 </head>
+<body class="antialiased">
 
-<body>
-    <p id="color">#000000</p>
+    <header class="bg-white/80 backdrop-blur-md sticky top-0 z-50 shadow-sm">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="font-bold text-xl text-gray-800">
+                <span data-lang-en>Enugu Solar</span>
+                <span data-lang-vi>Enugu Solar</span>
+            </div>
+            <div class="hidden md:flex items-center space-x-6">
+                <a href="#opportunity" class="nav-link">
+                    <span data-lang-en>The Opportunity</span>
+                    <span data-lang-vi>Cơ Hội</span>
+                </a>
+                <a href="#market" class="nav-link">
+                    <span data-lang-en>Market Catalyst</span>
+                    <span data-lang-vi>Thị Trường</span>
+                </a>
+                <a href="#model" class="nav-link">
+                    <span data-lang-en>Business Model</span>
+                    <span data-lang-vi>Mô Hình KD</span>
+                </a>
+                <a href="#financials" class="nav-link">
+                    <span data-lang-en>Financials</span>
+                    <span data-lang-vi>Tài Chính</span>
+                </a>
+                <a href="#impact" class="nav-link">
+                    <span data-lang-en>Impact</span>
+                    <span data-lang-vi>Tác Động</span>
+                </a>
+            </div>
+            <button id="lang-toggle" class="bg-[#81B29A] text-white px-4 py-2 rounded-md font-semibold hover:bg-[#6a947e] transition">
+                <span data-lang-en>Tiếng Việt</span>
+                <span data-lang-vi>English</span>
+            </button>
+        </nav>
+    </header>
+
+    <main>
+        <section id="hero" class="py-20 md:py-32 bg-white">
+            <div class="container mx-auto px-6 text-center">
+                <h1 class="text-4xl md:text-6xl font-extrabold text-[#3D405B] leading-tight">
+                    <span data-lang-en>Powering Enugu's Future:</span>
+                    <span data-lang-vi>Thắp Sáng Tương Lai Enugu:</span>
+                </h1>
+                <h2 class="text-4xl md:text-6xl font-extrabold text-[#81B29A] mt-2">
+                    <span data-lang-en>A Premier Solar Investment</span>
+                    <span data-lang-vi>Cơ Hội Đầu Tư Năng Lượng Mặt Trời Hàng Đầu</span>
+                </h2>
+                <p class="mt-6 text-lg md:text-xl max-w-3xl mx-auto text-gray-600">
+                    <span data-lang-en>Leveraging groundbreaking policy reforms and strong economic ambition, this proposal outlines a strategic entry into Enugu State's emerging rooftop solar market—a high-growth opportunity for sustainable and profitable energy solutions.</span>
+                    <span data-lang-vi>Tận dụng các cải cách chính sách đột phá và khát vọng kinh tế mạnh mẽ, đề xuất này vạch ra chiến lược thâm nhập vào thị trường điện mặt trời áp mái mới nổi của Bang Enugu—một cơ hội tăng trưởng cao cho các giải pháp năng lượng bền vững và sinh lời.</span>
+                </p>
+            </div>
+        </section>
+
+        <section id="opportunity" class="py-20">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-[#3D405B]">
+                        <span data-lang-en>Why Enugu? The Perfect Storm for Solar Investment</span>
+                        <span data-lang-vi>Tại Sao Là Enugu? Cơn Bão Hoàn Hảo Cho Đầu Tư Năng Lượng Mặt Trời</span>
+                    </h2>
+                    <p class="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">
+                        <span data-lang-en>Enugu is at a pivotal moment. A convergence of regulatory autonomy, ambitious economic goals, and clear market demand creates an unparalleled investment landscape.</span>
+                        <span data-lang-vi>Enugu đang ở một thời điểm then chốt. Sự hội tụ của quyền tự chủ về quy định, các mục tiêu kinh tế đầy tham vọng và nhu cầu thị trường rõ ràng tạo ra một bối cảnh đầu tư vô song.</span>
+                    </p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div class="stat-card">
+                        <div class="text-5xl font-extrabold text-[#81B29A]">1st</div>
+                        <h3 class="text-xl font-bold mt-4 text-[#3D405B]">
+                            <span data-lang-en>Regulatory Pioneer</span>
+                            <span data-lang-vi>Tiên Phong Về Quy Định</span>
+                        </h3>
+                        <p class="mt-2 text-gray-500">
+                            <span data-lang-en>First state to enact a comprehensive Electricity Law, creating its own regulator (EERC) for full control over the local market.</span>
+                            <span data-lang-vi>Bang đầu tiên ban hành Luật Điện lực toàn diện, thành lập cơ quan quản lý riêng (EERC) để kiểm soát hoàn toàn thị trường địa phương.</span>
+                        </p>
+                    </div>
+                    <div class="stat-card">
+                        <div class="text-5xl font-extrabold text-[#81B29A]">₦160<span class="text-3xl">/kWh</span></div>
+                        <h3 class="text-xl font-bold mt-4 text-[#3D405B]">
+                            <span data-lang-en>Favorable Tariff Reform</span>
+                            <span data-lang-vi>Cải Cách Giá Điện Thuận Lợi</span>
+                        </h3>
+                        <p class="mt-2 text-gray-500">
+                            <span data-lang-en>The new Band A grid tariff makes solar energy a financially superior alternative for residential and commercial users.</span>
+                            <span data-lang-vi>Biểu giá điện lưới mới (Band A) giúp năng lượng mặt trời trở thành một giải pháp thay thế vượt trội về mặt tài chính cho người dân và doanh nghiệp.</span>
+                        </p>
+                    </div>
+                    <div class="stat-card">
+                        <div class="text-5xl font-extrabold text-[#81B29A]">80%</div>
+                        <h3 class="text-xl font-bold mt-4 text-[#3D405B]">
+                            <span data-lang-en>Generous Subsidies</span>
+                            <span data-lang-vi>Trợ Cấp Hấp Dẫn</span>
+                        </h3>
+                        <p class="mt-2 text-gray-500">
+                            <span data-lang-en>The REDSEM mini-grid program offers up to 80% CAPEX subsidy, drastically reducing initial investment for qualifying projects.</span>
+                            <span data-lang-vi>Chương trình lưới điện mini REDSEM cung cấp trợ cấp CAPEX lên tới 80%, giảm đáng kể vốn đầu tư ban đầu cho các dự án đủ điều kiện.</span>
+                        </p>
+                    </div>
+                    <div class="stat-card">
+                        <div class="text-5xl font-extrabold text-[#81B29A]">₦600B</div>
+                        <h3 class="text-xl font-bold mt-4 text-[#3D405B]">
+                            <span data-lang-en>Economic Ambition</span>
+                            <span data-lang-vi>Tham Vọng Kinh Tế</span>
+                        </h3>
+                        <p class="mt-2 text-gray-500">
+                            <span data-lang-en>The governor's target for Internally Generated Revenue (IGR) signals aggressive support for industrialization and private investment.</span>
+                            <span data-lang-vi>Mục tiêu Thu Nội địa (IGR) của thống đốc báo hiệu sự hỗ trợ mạnh mẽ cho công nghiệp hóa và đầu tư tư nhân.</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="market" class="py-20 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-[#3D405B]">
+                        <span data-lang-en>Market Catalyst: Policy Meets Opportunity</span>
+                        <span data-lang-vi>Chất Xúc Tác Thị Trường: Chính Sách Gặp Gỡ Cơ Hội</span>
+                    </h2>
+                    <p class="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">
+                        <span data-lang-en>Recent policy changes have fundamentally de-risked and incentivized private investment in Enugu's energy sector, creating a clear path to profitability.</span>
+                        <span data-lang-vi>Những thay đổi chính sách gần đây đã giảm thiểu rủi ro và khuyến khích đầu tư tư nhân vào ngành năng lượng của Enugu, tạo ra một con đường rõ ràng để đạt được lợi nhuận.</span>
+                    </p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                    <div>
+                        <h3 class="text-2xl font-bold mb-6 text-[#3D405B]">
+                            <span data-lang-en>Key Regulatory Milestones</span>
+                            <span data-lang-vi>Các Cột Mốc Pháp Lý Quan Trọng</span>
+                        </h3>
+                        <div class="space-y-4">
+                            <div class="flex items-start">
+                                <div class="flex-shrink-0 h-8 w-8 rounded-full bg-[#81B29A] text-white flex items-center justify-center font-bold">1</div>
+                                <div class="ml-4">
+                                    <h4 class="font-semibold text-lg">
+                                        <span data-lang-en>Enugu Electricity Law</span>
+                                        <span data-lang-vi>Luật Điện lực Enugu</span>
+                                    </h4>
+                                    <p class="text-gray-500">
+                                        <span data-lang-en>Passed Sept 2023. Established the legal framework for a state-controlled electricity market.</span>
+                                        <span data-lang-vi>Ban hành tháng 9/2023. Thiết lập khuôn khổ pháp lý cho một thị trường điện do bang kiểm soát.</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <div class="flex-shrink-0 h-8 w-8 rounded-full bg-[#81B29A] text-white flex items-center justify-center font-bold">2</div>
+                                <div class="ml-4">
+                                    <h4 class="font-semibold text-lg">
+                                        <span data-lang-en>EERC Formation</span>
+                                        <span data-lang-vi>Thành lập EERC</span>
+                                    </h4>
+                                    <p class="text-gray-500">
+                                        <span data-lang-en>Effective Oct 2024. The new state regulator has full authority over licensing, tariffs, and mini-grids.</span>
+                                        <span data-lang-vi>Có hiệu lực tháng 10/2024. Cơ quan quản lý mới của bang có toàn quyền cấp phép, biểu giá và lưới điện mini.</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <div class="flex-shrink-0 h-8 w-8 rounded-full bg-[#81B29A] text-white flex items-center justify-center font-bold">3</div>
+                                <div class="ml-4">
+                                    <h4 class="font-semibold text-lg">
+                                        <span data-lang-en>Tariff Reform</span>
+                                        <span data-lang-vi>Cải cách Biểu giá</span>
+                                    </h4>
+                                    <p class="text-gray-500">
+                                        <span data-lang-en>Band A tariff set at ₦160/kWh from July 2025, creating a high price ceiling for grid power.</span>
+                                        <span data-lang-vi>Biểu giá Band A được ấn định là ₦160/kWh từ tháng 7/2025, tạo ra một mức giá trần cao cho điện lưới.</span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-bold mb-6 text-center text-[#3D405B]">
+                            <span data-lang-en>Energy Cost Comparison (₦/kWh)</span>
+                            <span data-lang-vi>So Sánh Chi Phí Năng Lượng (₦/kWh)</span>
+                        </h3>
+                        <div class="chart-container">
+                            <canvas id="costComparisonChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="model" class="py-20">
+            <div class="container mx-auto px-6">
+                 <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-[#3D405B]">
+                        <span data-lang-en>Our Business Model: Scalable & Targeted</span>
+                        <span data-lang-vi>Mô Hình Kinh Doanh: Có Thể Mở Rộng & Đúng Mục Tiêu</span>
+                    </h2>
+                    <p class="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">
+                        <span data-lang-en>We will deploy rooftop solar solutions across two key segments, offering customized systems that provide energy independence, cost savings, and reliability.</span>
+                        <span data-lang-vi>Chúng tôi sẽ triển khai các giải pháp điện mặt trời áp mái trên hai phân khúc chính, cung cấp các hệ thống tùy chỉnh mang lại sự độc lập về năng lượng, tiết kiệm chi phí và độ tin cậy.</span>
+                    </p>
+                </div>
+                <div class="max-w-4xl mx-auto">
+                    <div class="flex justify-center border-b mb-8">
+                        <div id="tab-residential" class="tab active-tab">
+                            <span data-lang-en>Residential Solutions</span>
+                            <span data-lang-vi>Giải Pháp Hộ Gia Đình</span>
+                        </div>
+                        <div id="tab-commercial" class="tab">
+                            <span data-lang-en>Commercial & Industrial (C&I)</span>
+                            <span data-lang-vi>Thương Mại & Công Nghiệp (C&I)</span>
+                        </div>
+                    </div>
+                    <div id="content-residential">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 bg-white p-8 rounded-lg shadow-sm">
+                            <div>
+                                <h4 class="font-bold text-xl text-[#3D405B] mb-3">
+                                    <span data-lang-en>Target Market</span>
+                                    <span data-lang-vi>Thị Trường Mục Tiêu</span>
+                                </h4>
+                                <ul class="list-disc list-inside text-gray-600 space-y-2">
+                                    <li><span data-lang-en>Urban & suburban households</span><span data-lang-vi>Hộ gia đình thành thị & ngoại ô</span></li>
+                                    <li><span data-lang-en>Gated communities & estates</span><span data-lang-vi>Khu dân cư khép kín & cao cấp</span></li>
+                                    <li><span data-lang-en>High-income individuals</span><span data-lang-vi>Cá nhân có thu nhập cao</span></li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-xl text-[#3D405B] mb-3">
+                                    <span data-lang-en>Value Proposition</span>
+                                    <span data-lang-vi>Giá Trị Cung Cấp</span>
+                                </h4>
+                                <ul class="list-disc list-inside text-gray-600 space-y-2">
+                                    <li><span data-lang-en>Beat the ₦160/kWh grid tariff</span><span data-lang-vi>Chi phí thấp hơn giá điện lưới ₦160/kWh</span></li>
+                                    <li><span data-lang-en>24/7 reliable power supply</span><span data-lang-vi>Nguồn điện ổn định 24/7</span></li>
+                                    <li><span data-lang-en>Increase property value</span><span data-lang-vi>Tăng giá trị bất động sản</span></li>
+                                    <li><span data-lang-en>Flexible financing options</span><span data-lang-vi>Các lựa chọn tài chính linh hoạt</span></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="content-commercial" class="hidden">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 bg-white p-8 rounded-lg shadow-sm">
+                            <div>
+                                <h4 class="font-bold text-xl text-[#3D405B] mb-3">
+                                    <span data-lang-en>Target Market</span>
+                                    <span data-lang-vi>Thị Trường Mục Tiêu</span>
+                                </h4>
+                                <ul class="list-disc list-inside text-gray-600 space-y-2">
+                                    <li><span data-lang-en>SMEs in industrial clusters (Timber, etc.)</span><span data-lang-vi>SMEs trong các cụm công nghiệp (Gỗ,...)</span></li>
+                                    <li><span data-lang-en>Factories in Lion Business Park</span><span data-lang-vi>Nhà máy tại Lion Business Park</span></li>
+                                    <li><span data-lang-en>Agro-Industrial Processing Zones (SAPZ)</span><span data-lang-vi>Khu chế biến Nông-Công nghiệp (SAPZ)</span></li>
+                                    <li><span data-lang-en>Hospitals, schools, and hotels</span><span data-lang-vi>Bệnh viện, trường học, khách sạn</span></li>
+                                </ul>
+                            </div>
+                             <div>
+                                <h4 class="font-bold text-xl text-[#3D405B] mb-3">
+                                    <span data-lang-en>Value Proposition</span>
+                                    <span data-lang-vi>Giá Trị Cung Cấp</span>
+                                </h4>
+                                <ul class="list-disc list-inside text-gray-600 space-y-2">
+                                    <li><span data-lang-en>Significant reduction in operational costs</span><span data-lang-vi>Giảm đáng kể chi phí vận hành</span></li>
+                                    <li><span data-lang-en>Uninterrupted production cycles</span><span data-lang-vi>Chu kỳ sản xuất không bị gián đoạn</span></li>
+                                    <li><span data-lang-en>Eligibility for green financing & subsidies</span><span data-lang-vi>Đủ điều kiện nhận tài trợ & trợ cấp xanh</span></li>
+                                    <li><span data-lang-en>Enhanced corporate social responsibility (CSR)</span><span data-lang-vi>Nâng cao trách nhiệm xã hội của doanh nghiệp (CSR)</span></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="financials" class="py-20 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-[#3D405B]">
+                        <span data-lang-en>Interactive Financial Projections</span>
+                        <span data-lang-vi>Dự Báo Tài Chính Tương Tác</span>
+                    </h2>
+                    <p class="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">
+                        <span data-lang-en>Explore the financial model based on a sample 1 MW (1,000 kW) deployment. Adjust the slider to see how key metrics scale with investment size.</span>
+                        <span data-lang-vi>Khám phá mô hình tài chính dựa trên một dự án mẫu 1 MW (1.000 kW). Điều chỉnh thanh trượt để xem các chỉ số chính thay đổi theo quy mô đầu tư.</span>
+                    </p>
+                </div>
+
+                <div class="max-w-4xl mx-auto mb-12">
+                     <label for="systemSize" class="block mb-2 font-medium text-gray-700">
+                        <span data-lang-en>Adjust Total System Size (kW):</span>
+                        <span data-lang-vi>Điều Chỉnh Tổng Công Suất Hệ Thống (kW):</span>
+                        <span id="systemSizeLabel" class="font-bold text-[#81B29A]">1000 kW</span>
+                     </label>
+                     <input type="range" id="systemSize" min="100" max="5000" value="1000" step="100" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                </div>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                     <div>
+                        <h3 class="text-2xl font-bold mb-4 text-center text-[#3D405B]">
+                            <span data-lang-en>CAPEX & OPEX Breakdown (Year 1)</span>
+                            <span data-lang-vi>Phân Tích CAPEX & OPEX (Năm 1)</span>
+                        </h3>
+                        <div class="chart-container">
+                             <canvas id="capexOpexChart"></canvas>
+                        </div>
+                     </div>
+                     <div class="bg-gray-50 p-8 rounded-lg">
+                        <h3 class="text-2xl font-bold mb-6 text-[#3D405B]">
+                            <span data-lang-en>Key Financial Metrics</span>
+                            <span data-lang-vi>Các Chỉ Số Tài Chính Chính</span>
+                        </h3>
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-center">
+                                <span class="font-medium text-gray-600"><span data-lang-en>Total CAPEX:</span><span data-lang-vi>Tổng CAPEX:</span></span>
+                                <span id="capexValue" class="font-bold text-2xl text-[#3D405B]"></span>
+                            </div>
+                             <div class="flex justify-between items-center">
+                                <span class="font-medium text-gray-600"><span data-lang-en>Est. Annual Revenue:</span><span data-lang-vi>Doanh Thu Ước Tính/Năm:</span></span>
+                                <span id="revenueValue" class="font-bold text-2xl text-[#3D405B]"></span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="font-medium text-gray-600"><span data-lang-en>Projected ROI (10 Yrs):</span><span data-lang-vi>ROI Dự Kiến (10 Năm):</span></span>
+                                <span id="roiValue" class="font-bold text-2xl text-green-600"></span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="font-medium text-gray-600"><span data-lang-en>Payback Period:</span><span data-lang-vi>Thời Gian Hoàn Vốn:</span></span>
+                                <span id="paybackValue" class="font-bold text-2xl text-green-600"></span>
+                            </div>
+                        </div>
+                        <p class="mt-6 text-sm text-gray-500">
+                            <span data-lang-en>Note: Projections are illustrative, based on current market assumptions, and do not include potential subsidies which would further improve returns.</span>
+                            <span data-lang-vi>Lưu ý: Các dự báo chỉ mang tính minh họa, dựa trên các giả định thị trường hiện tại và không bao gồm các khoản trợ cấp tiềm năng có thể cải thiện hơn nữa lợi nhuận.</span>
+                        </p>
+                     </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="impact" class="py-20">
+            <div class="container mx-auto px-6">
+                 <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-[#3D405B]">
+                        <span data-lang-en>Beyond Profit: Social & Environmental Impact</span>
+                        <span data-lang-vi>Vượt Qua Lợi Nhuận: Tác Động Xã Hội & Môi Trường</span>
+                    </h2>
+                    <p class="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">
+                        <span data-lang-en>This initiative aligns directly with Enugu's development goals, creating a positive ripple effect across the economy and environment.</span>
+                        <span data-lang-vi>Sáng kiến này phù hợp trực tiếp với các mục tiêu phát triển của Enugu, tạo ra hiệu ứng lan tỏa tích cực trên toàn bộ nền kinh tế và môi trường.</span>
+                    </p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                    <div class="stat-card">
+                        <div class="text-4xl mb-4">💡</div>
+                        <h3 class="text-xl font-bold text-[#3D405B]">
+                            <span data-lang-en>SME Empowerment</span>
+                            <span data-lang-vi>Trao Quyền cho SME</span>
+                        </h3>
+                        <p class="mt-2 text-gray-500">
+                            <span data-lang-en>Providing reliable, cheaper power to small and medium enterprises, boosting their productivity and competitiveness.</span>
+                            <span data-lang-vi>Cung cấp điện ổn định, giá rẻ hơn cho các doanh nghiệp vừa và nhỏ, thúc đẩy năng suất và khả năng cạnh tranh của họ.</span>
+                        </p>
+                    </div>
+                     <div class="stat-card">
+                        <div class="text-4xl mb-4">👥</div>
+                        <h3 class="text-xl font-bold text-[#3D405B]">
+                            <span data-lang-en>Job Creation</span>
+                            <span data-lang-vi>Tạo Việc Làm</span>
+                        </h3>
+                        <p class="mt-2 text-gray-500">
+                            <span data-lang-en>Creating skilled jobs in installation, maintenance, and operations, developing a local green-tech workforce.</span>
+                            <span data-lang-vi>Tạo ra các công việc tay nghề cao trong lắp đặt, bảo trì và vận hành, phát triển lực lượng lao động công nghệ xanh tại địa phương.</span>
+                        </p>
+                    </div>
+                     <div class="stat-card">
+                        <div class="text-4xl mb-4">🌍</div>
+                        <h3 class="text-xl font-bold text-[#3D405B]">
+                            <span data-lang-en>Carbon Reduction</span>
+                            <span data-lang-vi>Giảm Phát Thải Carbon</span>
+                        </h3>
+                        <p class="mt-2 text-gray-500">
+                            <span data-lang-en>Each megawatt of solar installed reduces reliance on fossil-fuel generators, contributing to cleaner air and Nigeria's climate goals.</span>
+                            <span data-lang-vi>Mỗi megawatt điện mặt trời được lắp đặt sẽ giảm sự phụ thuộc vào máy phát điện nhiên liệu hóa thạch, góp phần làm không khí sạch hơn và đạt được các mục tiêu khí hậu của Nigeria.</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-[#3D405B] text-white py-12">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-2xl font-bold">
+                <span data-lang-en>Join Us in Powering Enugu's Growth</span>
+                <span data-lang-vi>Cùng Chúng Tôi Thúc Đẩy Tăng Trưởng Của Enugu</span>
+            </h2>
+            <p class="mt-4 max-w-2xl mx-auto">
+                <span data-lang-en>We are seeking partners to capitalize on this unique market opportunity. For detailed discussions and access to the full business plan, please contact us.</span>
+                <span data-lang-vi>Chúng tôi đang tìm kiếm các đối tác để tận dụng cơ hội thị trường độc đáo này. Để thảo luận chi tiết và truy cập kế hoạch kinh doanh đầy đủ, vui lòng liên hệ với chúng tôi.</span>
+            </p>
+        </div>
+    </footer>
+
     <script>
-        function randomInt(min, max) {
-            return Math.floor(Math.random() * (max - min + 1) + min);
-        }
-
-        function hslToHex(h, s, l) {
-            h /= 360;
-            s /= 100;
-            l /= 100;
-            var r = void 0,
-                g = void 0,
-                b = void 0;
-            if (s === 0) {
-                r = g = b = l; // achromatic
-            } else {
-                var hue2rgb = function hue2rgb(p, q, t) {
-                    if (t < 0) t += 1;
-                    if (t > 1) t -= 1;
-                    if (t < 1 / 6) return p + (q - p) * 6 * t;
-                    if (t < 1 / 2) return q;
-                    if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
-                    return p;
-                };
-                var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
-                var p = 2 * l - q;
-                r = hue2rgb(p, q, h + 1 / 3);
-                g = hue2rgb(p, q, h);
-                b = hue2rgb(p, q, h - 1 / 3);
-            }
-            var toHex = function toHex(x) {
-                var hex = Math.round(x * 255).toString(16);
-                return hex.length === 1 ? '0' + hex : hex;
-            };
-            return '#' + toHex(r) + toHex(g) + toHex(b);
-        }
-
-        window.onload = function () {
-            let stopProp = function (ev) {
-                ev.stopPropagation();
-            }
-
-            var colorElement = document.getElementById("color");
-            colorElement.addEventListener("click", stopProp, false);
-            colorElement.addEventListener("mousedown", stopProp, false);
-
-            var setFavicon = function (hex) {
-                var canvas = document.createElement('canvas');
-                canvas.width = 16;
-                canvas.height = 16;
-                var ctx = canvas.getContext('2d');
-                ctx.fillStyle = hex;
-                ctx.fillRect(0, 0, 16, 16);
-                document.getElementsByTagName('link')[0].href = canvas.toDataURL("image/x-icon");
-            }
-
-            var setRandomColor = function setRandomColor() {
-                var h = void 0,
-                    s = void 0,
-                    l = void 0;
-
-                h = randomInt(0, 359);
-                s = randomInt(55, 75);
-                l = randomInt(40, 60);
-
-                document.documentElement.style.setProperty('--color', 'hsl(' + h + ', ' + s + '%, ' + l + '%)');
-                var hex = hslToHex(h, s, l);
-                document.title = hex;
-                colorElement.innerHTML = hex;
-                document.documentElement.style.setProperty('--color-transparent', hex + '22');
-
-                setFavicon(hex);
-            };
-            setRandomColor();
-
-            var body = document.getElementsByTagName("body")[0];
-            body.addEventListener("mousedown", function (ev) {
-                ev.preventDefault();
+        document.addEventListener('DOMContentLoaded', () => {
+            const langToggle = document.getElementById('lang-toggle');
+            langToggle.addEventListener('click', () => {
+                document.documentElement.lang = document.documentElement.lang === 'vi' ? 'en' : 'vi';
+                document.body.classList.toggle('lang-vi');
             });
-            body.addEventListener("click", function () {
-                setRandomColor();
-            }, false);
-        };
+
+            const tabs = {
+                residential: document.getElementById('tab-residential'),
+                commercial: document.getElementById('tab-commercial')
+            };
+            const contents = {
+                residential: document.getElementById('content-residential'),
+                commercial: document.getElementById('content-commercial')
+            };
+
+            tabs.residential.addEventListener('click', () => {
+                tabs.commercial.classList.remove('active-tab');
+                tabs.residential.classList.add('active-tab');
+                contents.commercial.classList.add('hidden');
+                contents.residential.classList.remove('hidden');
+            });
+            tabs.commercial.addEventListener('click', () => {
+                tabs.residential.classList.remove('active-tab');
+                tabs.commercial.classList.add('active-tab');
+                contents.residential.classList.add('hidden');
+                contents.commercial.classList.remove('hidden');
+            });
+
+            const costCtx = document.getElementById('costComparisonChart').getContext('2d');
+            const costComparisonChart = new Chart(costCtx, {
+                type: 'bar',
+                data: {
+                    labels: [
+                        document.body.classList.contains('lang-vi') ? 'Solar LCOE' : 'Solar LCOE',
+                        document.body.classList.contains('lang-vi') ? 'Lưới (Band A)' : 'Grid (Band A)',
+                        document.body.classList.contains('lang-vi') ? 'Máy phát Diesel' : 'Diesel Generator'
+                    ],
+                    datasets: [{
+                        label: document.body.classList.contains('lang-vi') ? 'Chi phí (₦/kWh)' : 'Cost (₦/kWh)',
+                        data: [75, 160, 250],
+                        backgroundColor: ['#81B29A', '#F2CC8F', '#E07A5F'],
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: '₦/kWh'
+                            }
+                        }
+                    }
+                }
+            });
+
+            let capexOpexChart;
+            const systemSizeSlider = document.getElementById('systemSize');
+            const systemSizeLabel = document.getElementById('systemSizeLabel');
+            const capexValue = document.getElementById('capexValue');
+            const revenueValue = document.getElementById('revenueValue');
+            const roiValue = document.getElementById('roiValue');
+            const paybackValue = document.getElementById('paybackValue');
+
+            const financialAssumptions = {
+                capexPerKw: 750000,
+                opexPercentage: 0.015,
+                kwhPerKwPerYear: 1600,
+                effectiveTariff: 140,
+                lifespan: 25,
+            };
+
+            function formatCurrency(value) {
+                if (value >= 1e9) return `₦${(value / 1e9).toFixed(2)}B`;
+                if (value >= 1e6) return `₦${(value / 1e6).toFixed(2)}M`;
+                return `₦${value.toLocaleString()}`;
+            }
+
+            function updateFinancials() {
+                const sizeKw = parseInt(systemSizeSlider.value);
+                systemSizeLabel.textContent = `${sizeKw} kW`;
+
+                const totalCapex = sizeKw * financialAssumptions.capexPerKw;
+                const annualOpex = totalCapex * financialAssumptions.opexPercentage;
+                const annualGeneration = sizeKw * financialAssumptions.kwhPerKwPerYear;
+                const annualRevenue = annualGeneration * financialAssumptions.effectiveTariff;
+                const annualNet = annualRevenue - annualOpex;
+
+                capexValue.textContent = formatCurrency(totalCapex);
+                revenueValue.textContent = formatCurrency(annualRevenue);
+                
+                if (annualNet > 0) {
+                    const paybackPeriod = totalCapex / annualNet;
+                    paybackValue.textContent = `${paybackPeriod.toFixed(1)} Years`;
+                    
+                    const totalNet10Yrs = (annualNet * 10) - totalCapex;
+                    const roi10Yrs = (totalNet10Yrs / totalCapex) * 100;
+                    roiValue.textContent = `${roi10Yrs.toFixed(0)}%`;
+                } else {
+                    paybackValue.textContent = "N/A";
+                    roiValue.textContent = "N/A";
+                }
+
+                const capexData = {
+                    panels: totalCapex * 0.45,
+                    inverters: totalCapex * 0.20,
+                    bos: totalCapex * 0.15,
+                    installation: totalCapex * 0.20,
+                };
+
+                if (capexOpexChart) {
+                    capexOpexChart.data.datasets[0].data = [capexData.panels, capexData.inverters, capexData.bos, capexData.installation, annualOpex];
+                    capexOpexChart.update();
+                } else {
+                    const capexCtx = document.getElementById('capexOpexChart').getContext('2d');
+                    capexOpexChart = new Chart(capexCtx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: ['Panels', 'Inverters', 'BoS', 'Installation', 'Annual OPEX'],
+                            datasets: [{
+                                data: [capexData.panels, capexData.inverters, capexData.bos, capexData.installation, annualOpex],
+                                backgroundColor: ['#81B29A', '#3D405B', '#F2CC8F', '#E07A5F', '#9DBF9E'],
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    position: 'bottom',
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function(context) {
+                                            let label = context.label || '';
+                                            if (label) {
+                                                label += ': ';
+                                            }
+                                            if (context.parsed !== null) {
+                                                label += formatCurrency(context.parsed);
+                                            }
+                                            return label;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+            }
+
+            systemSizeSlider.addEventListener('input', updateFinancials);
+            updateFinancials(); 
+        });
     </script>
 </body>
-
 </html>
