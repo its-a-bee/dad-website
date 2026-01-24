@@ -1,8 +1,8 @@
-name: sample-html
+name: rocinantes-veil-of-lunacy
 static_sites:
 - environment_slug: html
   github:
     branch: main
     deploy_on_push: true
-    repo: digitalocean/sample-html
-  name: sample-html
+    repo: its-a-bee/dad-website
+  name: rocinantes-veil-of-lunacy
