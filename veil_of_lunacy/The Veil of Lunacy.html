@@ -37,6 +37,8 @@
             background-color: #fefaf5;
             padding: 0;
             margin: 0;
+            overflow-x: hidden; /* prevent any body-level horizontal scroll */
+            width: 100%;
         }
 
         /* main content area: accounts for fixed-top navbar */
@@ -45,6 +47,8 @@
             max-width: 1200px;
             margin: 0 auto;
             background-color: #fefaf5;
+            width: 100%;
+            overflow-x: hidden;
         }
 
         /* Original container style (reading width ~42rem) */
@@ -321,53 +325,100 @@
             line-height: 1.5;
         }
 
-        /* ---------- FIXED TOP NAVBAR STYLES (fully functional) ---------- */
+        /* ---------- FIXED TOP NAVBAR — STRICT 100% WIDTH, NO OVERFLOW ---------- */
+        /* Core fix: ensure navbar never exceeds viewport width */
         .navbar.fixed-top {
             background-color: #2d3e40 !important;
             box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
             padding: 0.5rem 1rem;
             border-bottom: 1px solid #c0a88a;
+            width: 100%;
+            max-width: 100vw;
+            left: 0;
+            right: 0;
+            margin: 0;
+            overflow-x: hidden;
         }
 
-        .navbar-brand,
-        .navbar-nav .nav-link {
+        /* Override Bootstrap's container-fluid to prevent any overflow */
+        .navbar .container-fluid {
+            display: flex;
+            flex-wrap: nowrap;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 100%;
+            padding: 0;
+            margin: 0;
+            gap: 0.5rem;
+            overflow-x: hidden;
+        }
+
+        /* Brand: shrink gracefully, never cause overflow */
+        .navbar-brand {
+            flex-shrink: 1;
+            min-width: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height: 1.2;
+            font-size: 1rem;
+            max-width: 30%;
             color: #fefaf5 !important;
-            font-family: 'Yu Gothic Medium', 'Segoe UI', Georgia, serif;
-            font-weight: 500;
-            letter-spacing: 0.3px;
-        }
-        .navbar-brand:hover,
-        .navbar-nav .nav-link:hover {
-            color: #f0dbc0 !important;
+            text-decoration: none;
         }
 
-        /* Desktop inline links (the three href links) */
+        /* Desktop inline links wrapper - flexible container that can shrink */
+        .navbar-link-group {
+            display: flex;
+            align-items: center;
+            flex-shrink: 1;
+            overflow-x: auto;
+            white-space: nowrap;
+            scrollbar-width: none; /* hide scrollbar but keep functional */
+            -webkit-overflow-scrolling: touch;
+            gap: 0.25rem;
+            max-width: 55%;
+        }
+        
+        .navbar-link-group::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Map links inside the group */
         .navbar .map-link {
             color: #fefaf5;
             text-decoration: none;
-            margin-left: 1rem;
-            font-size: 0.95rem;
             font-weight: 500;
             transition: color 0.2s;
+            white-space: nowrap;
+            flex-shrink: 0;
+            font-size: 0.9rem;
+            padding: 0;
+            margin-left: 0.5rem;
+            padding-left: 0.5rem;
             border-left: 1px solid rgba(255,245,225,0.4);
-            padding-left: 1rem;
         }
+        
         .navbar .map-link:first-of-type {
-            border-left: none;
             margin-left: 0;
             padding-left: 0;
+            border-left: none;
         }
+        
         .navbar .map-link:hover {
             color: #f0dbc0;
         }
 
-        /* Navigation button (toggler) */
+        /* Toggler button: never shrink, always visible on right */
         .navbar-toggler {
+            flex-shrink: 0;
+            margin-left: auto;
             border-color: rgba(255,245,225,0.6);
-            flex-shrink: 0;  /* prevent toggler from squishing */
+            padding: 0.25rem 0.6rem;
         }
 
-        /* OFF CANVAS SIDEBAR STYLES — FULLY VISIBLE LIST ITEMS */
+        /* OFF CANVAS SIDEBAR STYLES */
         .offcanvas {
             background-color: #fffef7;
             font-family: 'Yu Gothic Medium', 'Segoe UI', serif;
@@ -450,69 +501,8 @@
             color: #8b6946;
         }
 
-        /* ========== CRITICAL FIX: NAVBAR NEVER OVERFLOWS, TOGGLER ALWAYS VISIBLE ========== */
-        /* Force container-fluid to use flex with wrap prevention, but allow links to shrink */
-        .navbar .container-fluid {
-            display: flex;
-            flex-wrap: nowrap;
-            align-items: center;
-            justify-content: space-between;
-            gap: 0.5rem;
-            width: 100%;
-            padding-left: 0;
-            padding-right: 0;
-        }
-        
-        /* Brand text: allow shrinking but never push button */
-        .navbar-brand {
-            flex-shrink: 1;
-            min-width: 0;
-            white-space: normal;
-            line-height: 1.2;
-            font-size: 1rem;
-            max-width: 35%;
-        }
-        
-        /* Link wrapper: can shrink and scroll if absolutely needed, but we'll compress text */
-        .navbar-link-group {
-            display: flex;
-            align-items: center;
-            flex-shrink: 1;
-            overflow-x: auto;
-            white-space: nowrap;
-            scrollbar-width: thin;
-            -webkit-overflow-scrolling: touch;
-            gap: 0.25rem;
-            /* subtle scroll hint on tiny screens, but we prioritize text compression */
-        }
-        
-        /* Hide scrollbar for Chrome/Safari but keep functionality */
-        .navbar-link-group::-webkit-scrollbar {
-            height: 2px;
-        }
-        
-        /* Map links inside the group */
-        .navbar .map-link {
-            flex-shrink: 0;
-            margin-left: 0.5rem;
-            padding-left: 0.5rem;
-            font-size: 0.9rem;
-            white-space: nowrap;
-        }
-        
-        .navbar .map-link:first-of-type {
-            margin-left: 0;
-            padding-left: 0;
-            border-left: none;
-        }
-        
-        /* Toggler button: never shrink, always visible on right */
-        .navbar-toggler {
-            flex-shrink: 0;
-            margin-left: auto;
-        }
-        
-        /* Medium screens (tablets) — compress link text */
+        /* ========== RESPONSIVE: ENSURE WIDTH NEVER EXCEEDS 100% ========== */
+        /* Medium screens (tablets) */
         @media (max-width: 991.98px) {
             .navbar .map-link {
                 font-size: 0.8rem;
@@ -521,17 +511,18 @@
             }
             .navbar-brand {
                 font-size: 0.9rem;
+                max-width: 28%;
             }
             .navbar.fixed-top {
                 padding: 0.4rem 0.75rem;
             }
         }
         
-        /* Small devices (phones, below 768px): reduce font sizes and allow link group to shrink more */
+        /* Small devices (phones, below 768px) */
         @media (max-width: 767.98px) {
             .navbar-brand {
                 font-size: 0.8rem;
-                max-width: 28%;
+                max-width: 26%;
             }
             .navbar .map-link {
                 font-size: 0.7rem;
@@ -539,11 +530,11 @@
                 padding-left: 0.3rem;
             }
             .navbar-link-group {
+                max-width: 50%;
                 gap: 0.1rem;
-                max-width: 55%;
             }
             .navbar-toggler {
-                padding: 0.2rem 0.45rem;
+                padding: 0.2rem 0.5rem;
                 font-size: 0.8rem;
             }
             .navbar-toggler-icon {
@@ -552,13 +543,11 @@
             }
         }
         
-        /* Very narrow screens (<= 550px): more aggressive brand truncation + link scrolling */
+        /* Narrow phones (<= 550px) */
         @media (max-width: 550px) {
             .navbar-brand {
                 font-size: 0.7rem;
                 max-width: 24%;
-                overflow: hidden;
-                text-overflow: ellipsis;
                 white-space: nowrap;
             }
             .navbar .map-link {
@@ -567,38 +556,51 @@
                 padding-left: 0.25rem;
             }
             .navbar-link-group {
-                max-width: 50%;
+                max-width: 48%;
                 overflow-x: auto;
-                white-space: nowrap;
                 -webkit-overflow-scrolling: touch;
-                scrollbar-width: none; /* hide scrollbar visually but keep scroll */
-            }
-            .navbar-link-group::-webkit-scrollbar {
-                display: none;
             }
         }
         
-        /* Ultra-small (<= 420px) — ensure brand doesn't vanish, toggler stays */
+        /* Very small devices (<= 420px) */
         @media (max-width: 420px) {
             .navbar-brand {
                 font-size: 0.65rem;
                 max-width: 22%;
-                white-space: nowrap;
             }
             .navbar .map-link {
                 font-size: 0.6rem;
                 margin-left: 0.2rem;
                 padding-left: 0.2rem;
             }
-            .navbar-toggler {
-                padding: 0.15rem 0.4rem;
-            }
             .navbar-link-group {
                 max-width: 45%;
             }
+            .navbar-toggler {
+                padding: 0.15rem 0.4rem;
+            }
         }
         
-        /* preserve document container responsiveness */
+        /* Extreme narrow (<= 360px) - aggressive but keeps everything within 100% */
+        @media (max-width: 360px) {
+            .navbar-brand {
+                font-size: 0.6rem;
+                max-width: 20%;
+            }
+            .navbar .map-link {
+                font-size: 0.55rem;
+                margin-left: 0.15rem;
+                padding-left: 0.15rem;
+            }
+            .navbar-link-group {
+                max-width: 44%;
+            }
+            .navbar .container-fluid {
+                gap: 0.3rem;
+            }
+        }
+
+        /* Document container responsiveness */
         @media (max-width: 576px) {
             .main-content {
                 padding-top: 75px;
@@ -626,38 +628,46 @@
                 text-indent: -0.8rem;
             }
         }
+        
+        /* Additional global overflow guard */
+        html {
+            overflow-x: hidden;
+            width: 100%;
+        }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
 
-<!-- ========== FIXED TOP NAVBAR — FULLY RESPONSIVE, NEVER OVERFLOWS ========== 
-     Key improvements:
-     1. .container-fluid uses flex-wrap: nowrap and proper gaps.
-     2. Brand text shrinks gracefully on narrow screens.
-     3. Link group (two map links) can shrink or scroll horizontally if needed, but font size reduces first.
-     4. Toggler button always stays visible on the right edge, never pushed off-screen.
-     5. Removed any absolute positioning or fixed widths that could cause overflow.
+<!-- ========== FIXED TOP NAVBAR — STRICTLY 100% VIEWPORT WIDTH, NEVER OVERFLOWS ========== 
+     Key improvements for this revision:
+     1. navbar.fixed-top now has width: 100%, max-width: 100vw, left:0, right:0, overflow-x: hidden.
+     2. .container-fluid uses flex-wrap: nowrap, no extra padding that could cause overflow.
+     3. Brand text uses text-overflow: ellipsis to prevent overflow.
+     4. Link group can scroll horizontally if absolutely needed, but font sizes shrink aggressively first.
+     5. Toggler button always stays on screen with flex-shrink: 0.
+     6. Added global html/body overflow-x: hidden for ultimate safety.
+     7. On all screen sizes, navbar never exceeds viewport width; the expand button remains fully visible.
 -->
 <nav class="navbar fixed-top bg-body-secondary">
     <div class="container-fluid">
-        <!-- Brand: allowed to shrink -->
+        <!-- Brand: truncated if necessary -->
         <a class="navbar-brand" href="https://rocinanteswindmill.com">Rocinante's Windmill</a>
 
-        <!-- Desktop inline links — wrapped in a flexible container -->
+        <!-- Desktop inline links — flexible wrapper with horizontal scroll as last resort -->
         <div class="navbar-link-group">
             <a href="#fantasy-references" class="map-link">The Fantasy World</a>
             <a href="https://www.annabmeyer.com/576cy-easyzoom/" target="_blank" class="map-link">🗺️ Map - Anna B Meyer</a>
         </div>
 
-        <!-- Toggler button for offcanvas (right side collapsible menu) — always visible -->
+        <!-- Toggler button for offcanvas — always visible and never off-screen -->
         <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
     </div>
 </nav>
 
-<!-- OFF CANVAS COMPONENT — all nav items now display correctly as a vertical list -->
+<!-- OFF CANVAS COMPONENT — all nav items display correctly as a vertical list -->
 <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
     <div class="offcanvas-header">
         <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Contents & Navigation</h5>
