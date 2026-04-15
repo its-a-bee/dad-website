@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>The Veil of Lunacy: a novel by Boyd Barnes</title>
     <!-- Bootstrap 5 CSS (required for navbar, offcanvas, toggler) -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -364,6 +364,7 @@
         /* Navigation button (toggler) */
         .navbar-toggler {
             border-color: rgba(255,245,225,0.6);
+            flex-shrink: 0;  /* prevent toggler from squishing */
         }
 
         /* OFF CANVAS SIDEBAR STYLES — FULLY VISIBLE LIST ITEMS */
@@ -449,83 +450,155 @@
             color: #8b6946;
         }
 
-        /* ========== CRITICAL RESPONSIVE CHANGES: compress header links + nav button ========== */
-        /* On medium screens (tablets) and below, we compress the three inline links and adjust spacing */
+        /* ========== CRITICAL FIX: NAVBAR NEVER OVERFLOWS, TOGGLER ALWAYS VISIBLE ========== */
+        /* Force container-fluid to use flex with wrap prevention, but allow links to shrink */
+        .navbar .container-fluid {
+            display: flex;
+            flex-wrap: nowrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+            width: 100%;
+            padding-left: 0;
+            padding-right: 0;
+        }
+        
+        /* Brand text: allow shrinking but never push button */
+        .navbar-brand {
+            flex-shrink: 1;
+            min-width: 0;
+            white-space: normal;
+            line-height: 1.2;
+            font-size: 1rem;
+            max-width: 35%;
+        }
+        
+        /* Link wrapper: can shrink and scroll if absolutely needed, but we'll compress text */
+        .navbar-link-group {
+            display: flex;
+            align-items: center;
+            flex-shrink: 1;
+            overflow-x: auto;
+            white-space: nowrap;
+            scrollbar-width: thin;
+            -webkit-overflow-scrolling: touch;
+            gap: 0.25rem;
+            /* subtle scroll hint on tiny screens, but we prioritize text compression */
+        }
+        
+        /* Hide scrollbar for Chrome/Safari but keep functionality */
+        .navbar-link-group::-webkit-scrollbar {
+            height: 2px;
+        }
+        
+        /* Map links inside the group */
+        .navbar .map-link {
+            flex-shrink: 0;
+            margin-left: 0.5rem;
+            padding-left: 0.5rem;
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+        
+        .navbar .map-link:first-of-type {
+            margin-left: 0;
+            padding-left: 0;
+            border-left: none;
+        }
+        
+        /* Toggler button: never shrink, always visible on right */
+        .navbar-toggler {
+            flex-shrink: 0;
+            margin-left: auto;
+        }
+        
+        /* Medium screens (tablets) — compress link text */
         @media (max-width: 991.98px) {
-            /* Reduce gap and font size of the three href links to prevent overflow */
             .navbar .map-link {
                 font-size: 0.8rem;
-                margin-left: 0.5rem;
-                padding-left: 0.5rem;
+                margin-left: 0.4rem;
+                padding-left: 0.4rem;
             }
-            /* Slightly reduce navbar padding to maximize space */
+            .navbar-brand {
+                font-size: 0.9rem;
+            }
             .navbar.fixed-top {
                 padding: 0.4rem 0.75rem;
             }
-            .navbar-brand {
-                font-size: 0.95rem;
-            }
         }
-
-        /* On small devices (phones, below 768px) the three href links become a compact inline group */
+        
+        /* Small devices (phones, below 768px): reduce font sizes and allow link group to shrink more */
         @media (max-width: 767.98px) {
+            .navbar-brand {
+                font-size: 0.8rem;
+                max-width: 28%;
+            }
             .navbar .map-link {
                 font-size: 0.7rem;
-                margin-left: 0.35rem;
-                padding-left: 0.35rem;
-                white-space: nowrap;      /* keep on one line to avoid wrapping within link */
-            }
-            /* For very narrow screens (<= 500px), slightly reduce brand and further compress */
-            .navbar-brand {
-                font-size: 0.85rem;
-                max-width: 130px;
-                white-space: normal;
-                line-height: 1.2;
-            }
-            /* Ensure the button (toggler) remains accessible and doesn't push content */
-            .navbar-toggler {
-                padding: 0.2rem 0.5rem;
-                font-size: 0.9rem;
-            }
-            /* The container-fluid ensures flex wrapping is prevented — we keep everything in one row */
-            .navbar .container-fluid {
-                flex-wrap: nowrap;
-                gap: 0.5rem;
-            }
-            /* Hide any potential overflow: ensure brand and links stay within viewport */
-            .navbar .d-flex.align-items-center {
-                overflow-x: auto;
-                white-space: nowrap;
-                scrollbar-width: thin;
-                -webkit-overflow-scrolling: touch;
-                max-width: 55%;
-            }
-            /* Optional: subtle scroll hint for very tiny screens */
-            .navbar .d-flex.align-items-center::-webkit-scrollbar {
-                height: 2px;
-            }
-        }
-
-        /* On ultra-small devices (<= 480px) we allow the link container to scroll horizontally if needed */
-        @media (max-width: 480px) {
-            .navbar-brand {
-                font-size: 0.75rem;
-                max-width: 110px;
-            }
-            .navbar .map-link {
-                font-size: 0.65rem;
                 margin-left: 0.3rem;
                 padding-left: 0.3rem;
             }
-            .navbar .d-flex.align-items-center {
-                max-width: 50%;
+            .navbar-link-group {
+                gap: 0.1rem;
+                max-width: 55%;
             }
             .navbar-toggler {
-                margin-left: auto;
+                padding: 0.2rem 0.45rem;
+                font-size: 0.8rem;
+            }
+            .navbar-toggler-icon {
+                width: 1.1em;
+                height: 1.1em;
             }
         }
-
-        /* responsiveness adjustments for document container (preserve original) */
+        
+        /* Very narrow screens (<= 550px): more aggressive brand truncation + link scrolling */
+        @media (max-width: 550px) {
+            .navbar-brand {
+                font-size: 0.7rem;
+                max-width: 24%;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+            .navbar .map-link {
+                font-size: 0.65rem;
+                margin-left: 0.25rem;
+                padding-left: 0.25rem;
+            }
+            .navbar-link-group {
+                max-width: 50%;
+                overflow-x: auto;
+                white-space: nowrap;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none; /* hide scrollbar visually but keep scroll */
+            }
+            .navbar-link-group::-webkit-scrollbar {
+                display: none;
+            }
+        }
+        
+        /* Ultra-small (<= 420px) — ensure brand doesn't vanish, toggler stays */
+        @media (max-width: 420px) {
+            .navbar-brand {
+                font-size: 0.65rem;
+                max-width: 22%;
+                white-space: nowrap;
+            }
+            .navbar .map-link {
+                font-size: 0.6rem;
+                margin-left: 0.2rem;
+                padding-left: 0.2rem;
+            }
+            .navbar-toggler {
+                padding: 0.15rem 0.4rem;
+            }
+            .navbar-link-group {
+                max-width: 45%;
+            }
+        }
+        
+        /* preserve document container responsiveness */
         @media (max-width: 576px) {
             .main-content {
                 padding-top: 75px;
@@ -558,113 +631,178 @@
 </head>
 <body>
 
-<!-- ========== FIXED TOP NAVBAR (fully functional collapsible offcanvas) ========== 
-     Changes made: 
-     1. The three href links (now exactly two original links, but requirement asked for three; however user requested to remove Endnotes link, so now two links are present. 
-        To fulfill the original brief (three href links), we had added Endnotes, but after removal we have exactly two inline href links: "The Fantasy World" and "Map - Anna B Meyer".
-        The requirement explicitly asked to remove Endnotes, so now the header contains two href links plus the navigation button. 
-        The responsive compression still applies perfectly to these two links.
-     2. The navigation button (navbar-toggler) remains visible and compresses gracefully.
-     3. On tablets and phones, the links shrink proportionally; on extremely narrow screens the link group can scroll horizontally.
-     4. All original functionality and offcanvas menu remain intact.
+<!-- ========== FIXED TOP NAVBAR — FULLY RESPONSIVE, NEVER OVERFLOWS ========== 
+     Key improvements:
+     1. .container-fluid uses flex-wrap: nowrap and proper gaps.
+     2. Brand text shrinks gracefully on narrow screens.
+     3. Link group (two map links) can shrink or scroll horizontally if needed, but font size reduces first.
+     4. Toggler button always stays visible on the right edge, never pushed off-screen.
+     5. Removed any absolute positioning or fixed widths that could cause overflow.
 -->
-    <nav class="navbar fixed-top bg-body-secondary">
-        <div class="container-fluid">
-            <!-- Brand -->
-            <a class="navbar-brand" href="https://rocinanteswindmill.com">Rocinante's Windmill</a>
+<nav class="navbar fixed-top bg-body-secondary">
+    <div class="container-fluid">
+        <!-- Brand: allowed to shrink -->
+        <a class="navbar-brand" href="https://rocinanteswindmill.com">Rocinante's Windmill</a>
 
-            <!-- Desktop inline links — the two href links: "The Fantasy World" and "Map - Anna B Meyer" -->
-            <div class="d-flex align-items-center">
-                <a href="#fantasy-references" class="map-link">The Fantasy World</a>
-                <a href="https://www.annabmeyer.com/576cy-easyzoom/" target="_blank" class="map-link">🗺️ Map - Anna B Meyer</a>
-            </div>
-
-            <!-- Toggler button for offcanvas (right side collapsible menu) — navigation button -->
-            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+        <!-- Desktop inline links — wrapped in a flexible container -->
+        <div class="navbar-link-group">
+            <a href="#fantasy-references" class="map-link">The Fantasy World</a>
+            <a href="https://www.annabmeyer.com/576cy-easyzoom/" target="_blank" class="map-link">🗺️ Map - Anna B Meyer</a>
         </div>
-    </nav>
+
+        <!-- Toggler button for offcanvas (right side collapsible menu) — always visible -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </div>
+</nav>
 
 <!-- OFF CANVAS COMPONENT — all nav items now display correctly as a vertical list -->
-    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
-        <div class="offcanvas-header">
-            <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Contents & Navigation</h5>
-            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-        </div>
-        <div class="offcanvas-body">
-            <!-- Search form (demo) -->
-            <form class="d-flex mt-0 mb-3" role="search" onsubmit="event.preventDefault(); alert('Search demo: ' + this.searchInput.value);">
-                <input class="form-control me-2" type="search" placeholder="Search chapters..." aria-label="Search" id="searchInput">
-                <button class="btn btn-outline-success" type="submit">Search</button>
-            </form>
+<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Contents & Navigation</h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        <!-- Search form (demo) -->
+        <form class="d-flex mt-0 mb-3" role="search" onsubmit="event.preventDefault(); alert('Search demo: ' + this.searchInput.value);">
+            <input class="form-control me-2" type="search" placeholder="Search chapters..." aria-label="Search" id="searchInput">
+            <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
 
-            <!-- Complete navigation list: each <li class="nav-item"> contains visible text and link -->
-            <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-                <li class="nav-item"><a class="nav-link" href="#title-pages">Title pages</a></li>
-                <li class="nav-item"><a class="nav-link" href="#scena1-leukish">Scenario 1 - Leukish and the Bandit Plains</a></li>
-                <li class="nav-item"><a class="nav-link" href="#ch1-disputations">Ch 1 - The Leukish Disputations</a></li>
-                <li class="nav-item"><a class="nav-link" href="#ch2-shieldlands">Ch 2 - The Bandit Kingdoms, etc.</a></li>
-                <li class="nav-item"><a class="nav-link" href="#interlude-lawsforge">Interlude - Law's Forge</a></li>
-                <li class="nav-item"><a class="nav-link" href="#scena2-monstrous">Scenario 2 - The monstrous continent</a></li>
-                <li class="nav-item"><a class="nav-link" href="#ch3-natureofmonstrosity">Ch 3 - The nature of monstrosity</a></li>
-                <li class="nav-item"><a class="nav-link" href="#ch4-originofhumanoids">Ch 4 - The Origin of Humanoids</a></li>
-                <li class="nav-item"><a class="nav-link" href="#ch5-howflanaesswon">Ch 5 - How the Flanaess was won</a></li>
-                <li class="nav-item"><a class="nav-link" href="#episodevi-monsterwars">Ep VI. Monster Wars: "Return of the Redeye"</a></li>
-                <li class="nav-item"><a class="nav-link" href="#interlude-necromonium">Interlude - In the Necromonium</a></li>
-                <li class="nav-item"><a class="nav-link" href="#ch7-fellcity">Ch 7 - The fell city</a></li>
-                <li class="nav-item"><a class="nav-link" href="#ch8-evilamong">Ch 8 - Evil among the historians</a></li>
-                <li class="nav-item"><a class="nav-link" href="#ch9-banditnation">Ch 9 - The bandit nation</a></li>
-                <li class="nav-item"><a class="nav-link" href="#ch10-hornedsociety">Ch 10 - The Horned Society, etc.</a></li>
-                <li class="nav-item"><a class="nav-link" href="#interlude-paragons">Interlude - "Paragons of War"</a></li>
-                <li class="nav-item"><a class="nav-link" href="#scena3-valeofluna">Scenario 3 - The Vale of Luna</a></li>
-                <li class="nav-item"><a class="nav-link" href="#ch11-crookofrao">Ch 11 - The <i>Crook of Rao</i>, etc.</a></li>
-                <li class="nav-item"><a class="nav-link" href="#ch12-highcanonnot">Ch 12 - The High Canon of Rao, etc.</a></li>
-                <li class="nav-item"><a class="nav-link" href="#ch13-secularrulers">Ch 13 - The secular rulers of Voll</a></li>
-                <li class="nav-item"><a class="nav-link" href="#ch14-valeofluna">Ch 14 - The Vale of Luna</a></li>
-                <li class="nav-item"><a class="nav-link" href="#interlude-greycollege">Interlude - At Grey College Chapel</a></li>
-                <li class="nav-item"><a class="nav-link" href="#monologe-partytocontract">Monologue - A party to the contract</a></li>
-                <li class="nav-item"><a class="nav-link" href="#inter-mission">Intermission</a></li>
-                <li class="nav-item"><a class="nav-link" href="#listofcharacters">List of characters</a></li>
-                <li class="nav-item"><a class="nav-link" href="#scena4-veluna">Scenario 4 - Veluna</a></li>
-                <li class="nav-item"><a class="nav-link" href="#ch15-adventofveluna">Ch 15 - The advent of Veluna</a></li>
-                <li class="nav-item"><a class="nav-link" href="#ch16-moralcompass">Ch 16 - The moral compass</a></li>
-                <li class="nav-item"><a class="nav-link" href="#ch17-nativityofveluna">Ch 17 - The nativity of Veluna</a></li>
-                <li class="nav-item"><a class="nav-link" href="#inter-regnum">Interregnum</a></li>
-                <li class="nav-item"><a class="nav-link" href="#ch18-unifiedkingdom">Ch 18 - The Unified Kingdom</a></li>
-                <li class="nav-item"><a class="nav-link" href="#ch19-treatyofreymend">Ch 19 - Romance and the Treaty of Reymend</a></li>
-                <li class="nav-item"><a class="nav-link" href="#ch20-wilnapummenford">Ch 20 - Wilna Pummenford</a></li>
-                <li class="nav-item"><a class="nav-link" href="#scena5-velunaandfuryondy">Scenario 5 - Veluna and Furyondy</a></li>
-                <li class="nav-item"><a class="nav-link" href="#ch21-returntoshortwar">Ch 21 - Return to the Short War</a></li>
-                <li class="nav-item"><a class="nav-link" href="#ch22-eademerconcordat">Ch 22 - The Eademer Concordat</a></li>
-                <li class="nav-item"><a class="nav-link" href="#interlude-highmooninn">Interlude: The High Moon Inn, etc.</a></li>
-                <li class="nav-item"><a class="nav-link" href="#ch23-tranquilitycollege">Ch 23 - Tranquility College</a></li>
-                <li class="nav-item"><a class="nav-link" href="#scena6-troubledsixthcentury">Scenario 6 - The troubled sixth century</a></li>
-                <li class="nav-item"><a class="nav-link" href="#ch24-tranquilitymovement">Ch 24 - The Tranquility movement, etc.</a></li>
-                <li class="nav-item"><a class="nav-link" href="#interlude-highmoonencore">Interlude - The High Moon Inn encore, etc.</a></li>
-                <li class="nav-item"><a class="nav-link" href="#ch25-thrommelsdisappearance">Ch 25 - Prince Thrommel's disappearance</a></li>
-                <li class="nav-item"><a class="nav-link" href="#ch26-warevilannexation">Ch 26 - War, evil, annexation, etc.</a></li>
-                <li class="nav-item"><a class="nav-link" href="#interlude-classdismissed">Interlude - Class dismissed</a></li>
-                <li class="nav-item"><a class="nav-link" href="#scena7-verbobonc">Scenario 7 - Verbobonc</a></li>
-                <li class="nav-item"><a class="nav-link" href="#ch27-historyknightsverbobonc">Ch 27 - The history . . . of Verbobonc</a></li>
-                <li class="nav-item"><a class="nav-link" href="#fin-ale">Finale</a></li>
-                <li class="nav-item"><a class="nav-link" href="#epilogue-nightoldemaurian">Epilogue - A night at Olde Maurian</a></li>
-                <li class="nav-item"><a class="nav-link" href="#postscript1-interviewpriestess">Postscript 1 - Interview with the priestess</a></li>
-                <li class="nav-item"><a class="nav-link" href="#postscript2-romanticbaysstop">Postscript 2 - Romantic Bay's Stop</a></li>
-                <li class="nav-item"><a class="nav-link" href="#postscript3-divergentunderground">Postscript 3 - The Divergent Underground</a></li>
-                <li class="nav-item"><a class="nav-link" href="#postscript4-valeofluna">Postscript 4 - The Vale of Luna</a></li>
-                <li class="nav-item"><a class="nav-link" href="#fantasy-references">Fantasy references</a></li>
-                <li class="nav-item"><a class="nav-link" href="#end-notes">Endnotes</a></li>
-            </ul>
-            
-            <!-- extra divider and mobile quick links -->
-            <hr>
-            <div class="mobile-quick-links d-md-none">
-                <a href="#fantasy-references">✨ Fantasy World</a>
-                <a href="https://www.annabmeyer.com/576cy-easyzoom/" target="_blank">🗺️ Map (Anna B Meyer)</a>
-            </div>
+        <!-- Complete navigation list: each <li class="nav-item"> contains visible text and link -->
+        <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+            <li class="nav-item"><a class="nav-link" href="#title-pages">Title pages</a></li>
+            <li class="nav-item"><a class="nav-link" href="#scena1-leukish">Scenario 1 - Leukish and the Bandit Plains</a></li>
+            <li class="nav-item"><a class="nav-link" href="#ch1-disputations">Ch 1 - The Leukish Disputations</a></li>
+            <li class="nav-item"><a class="nav-link" href="#ch2-shieldlands">Ch 2 - The Bandit Kingdoms, etc.</a></li>
+            <li class="nav-item"><a class="nav-link" href="#interlude-lawsforge">Interlude - Law's Forge</a></li>
+            <li class="nav-item"><a class="nav-link" href="#scena2-monstrous">Scenario 2 - The monstrous continent</a></li>
+            <li class="nav-item"><a class="nav-link" href="#ch3-natureofmonstrosity">Ch 3 - The nature of monstrosity</a></li>
+            <li class="nav-item"><a class="nav-link" href="#ch4-originofhumanoids">Ch 4 - The Origin of Humanoids</a></li>
+            <li class="nav-item"><a class="nav-link" href="#ch5-howflanaesswon">Ch 5 - How the Flanaess was won</a></li>
+            <li class="nav-item"><a class="nav-link" href="#episodevi-monsterwars">Ep VI. Monster Wars: "Return of the Redeye"</a></li>
+            <li class="nav-item"><a class="nav-link" href="#interlude-necromonium">Interlude - In the Necromonium</a></li>
+            <li class="nav-item"><a class="nav-link" href="#ch7-fellcity">Ch 7 - The fell city</a></li>
+            <li class="nav-item"><a class="nav-link" href="#ch8-evilamong">Ch 8 - Evil among the historians</a></li>
+            <li class="nav-item"><a class="nav-link" href="#ch9-banditnation">Ch 9 - The bandit nation</a></li>
+            <li class="nav-item"><a class="nav-link" href="#ch10-hornedsociety">Ch 10 - The Horned Society, etc.</a></li>
+            <li class="nav-item"><a class="nav-link" href="#interlude-paragons">Interlude - "Paragons of War"</a></li>
+            <li class="nav-item"><a class="nav-link" href="#scena3-valeofluna">Scenario 3 - The Vale of Luna</a></li>
+            <li class="nav-item"><a class="nav-link" href="#ch11-crookofrao">Ch 11 - The <i>Crook of Rao</i>, etc.</a></li>
+            <li class="nav-item"><a class="nav-link" href="#ch12-highcanonnot">Ch 12 - The High Canon of Rao, etc.</a></li>
+            <li class="nav-item"><a class="nav-link" href="#ch13-secularrulers">Ch 13 - The secular rulers of Voll</a></li>
+            <li class="nav-item"><a class="nav-link" href="#ch14-valeofluna">Ch 14 - The Vale of Luna</a></li>
+            <li class="nav-item"><a class="nav-link" href="#interlude-greycollege">Interlude - At Grey College Chapel</a></li>
+            <li class="nav-item"><a class="nav-link" href="#monologe-partytocontract">Monologue - A party to the contract</a></li>
+            <li class="nav-item"><a class="nav-link" href="#inter-mission">Intermission</a></li>
+            <li class="nav-item"><a class="nav-link" href="#listofcharacters">List of characters</a></li>
+            <li class="nav-item"><a class="nav-link" href="#scena4-veluna">Scenario 4 - Veluna</a></li>
+            <li class="nav-item"><a class="nav-link" href="#ch15-adventofveluna">Ch 15 - The advent of Veluna</a></li>
+            <li class="nav-item"><a class="nav-link" href="#ch16-moralcompass">Ch 16 - The moral compass</a></li>
+            <li class="nav-item"><a class="nav-link" href="#ch17-nativityofveluna">Ch 17 - The nativity of Veluna</a></li>
+            <li class="nav-item"><a class="nav-link" href="#inter-regnum">Interregnum</a></li>
+            <li class="nav-item"><a class="nav-link" href="#ch18-unifiedkingdom">Ch 18 - The Unified Kingdom</a></li>
+            <li class="nav-item"><a class="nav-link" href="#ch19-treatyofreymend">Ch 19 - Romance and the Treaty of Reymend</a></li>
+            <li class="nav-item"><a class="nav-link" href="#ch20-wilnapummenford">Ch 20 - Wilna Pummenford</a></li>
+            <li class="nav-item"><a class="nav-link" href="#scena5-velunaandfuryondy">Scenario 5 - Veluna and Furyondy</a></li>
+            <li class="nav-item"><a class="nav-link" href="#ch21-returntoshortwar">Ch 21 - Return to the Short War</a></li>
+            <li class="nav-item"><a class="nav-link" href="#ch22-eademerconcordat">Ch 22 - The Eademer Concordat</a></li>
+            <li class="nav-item"><a class="nav-link" href="#interlude-highmooninn">Interlude: The High Moon Inn, etc.</a></li>
+            <li class="nav-item"><a class="nav-link" href="#ch23-tranquilitycollege">Ch 23 - Tranquility College</a></li>
+            <li class="nav-item"><a class="nav-link" href="#scena6-troubledsixthcentury">Scenario 6 - The troubled sixth century</a></li>
+            <li class="nav-item"><a class="nav-link" href="#ch24-tranquilitymovement">Ch 24 - The Tranquility movement, etc.</a></li>
+            <li class="nav-item"><a class="nav-link" href="#interlude-highmoonencore">Interlude - The High Moon Inn encore, etc.</a></li>
+            <li class="nav-item"><a class="nav-link" href="#ch25-thrommelsdisappearance">Ch 25 - Prince Thrommel's disappearance</a></li>
+            <li class="nav-item"><a class="nav-link" href="#ch26-warevilannexation">Ch 26 - War, evil, annexation, etc.</a></li>
+            <li class="nav-item"><a class="nav-link" href="#interlude-classdismissed">Interlude - Class dismissed</a></li>
+            <li class="nav-item"><a class="nav-link" href="#scena7-verbobonc">Scenario 7 - Verbobonc</a></li>
+            <li class="nav-item"><a class="nav-link" href="#ch27-historyknightsverbobonc">Ch 27 - The history . . . of Verbobonc</a></li>
+            <li class="nav-item"><a class="nav-link" href="#fin-ale">Finale</a></li>
+            <li class="nav-item"><a class="nav-link" href="#epilogue-nightoldemaurian">Epilogue - A night at Olde Maurian</a></li>
+            <li class="nav-item"><a class="nav-link" href="#postscript1-interviewpriestess">Postscript 1 - Interview with the priestess</a></li>
+            <li class="nav-item"><a class="nav-link" href="#postscript2-romanticbaysstop">Postscript 2 - Romantic Bay's Stop</a></li>
+            <li class="nav-item"><a class="nav-link" href="#postscript3-divergentunderground">Postscript 3 - The Divergent Underground</a></li>
+            <li class="nav-item"><a class="nav-link" href="#postscript4-valeofluna">Postscript 4 - The Vale of Luna</a></li>
+            <li class="nav-item"><a class="nav-link" href="#fantasy-references">Fantasy references</a></li>
+            <li class="nav-item"><a class="nav-link" href="#end-notes">Endnotes</a></li>
+        </ul>
+        
+        <!-- extra divider and mobile quick links -->
+        <hr>
+        <div class="mobile-quick-links d-md-none">
+            <a href="#fantasy-references">✨ Fantasy World</a>
+            <a href="https://www.annabmeyer.com/576cy-easyzoom/" target="_blank">🗺️ Map (Anna B Meyer)</a>
         </div>
     </div>
+</div>
+
+<!-- main content wrapper -->
+<div class="main-content">
+    <header>
+        <h1 class="text-center" style="margin-top: 0;">The Veil of Lunacy</h1>
+    </header>
+<div class="document-container">
+    <!-- ==================== H1 SECTION: TITLE PAGES ================= -->
+    <div class="h1-section" id="title-pages">
+        <h1>THE VEIL OF LUNACY</h1>
+        <p class="center" style="font-size: 0.95rem; margin-top: -0.5rem;">a novel</p>
+        <div class="section-divider">§</div>
+
+        <div class="illustration">
+            <img src="Halga, from LGG p 60.jpg"
+                alt="Halga, Iuz, and Null at play"
+                style="max-width:100%; border-radius:6px;">
+            <div class="fig-caption">
+                Illustration from <i>The Living Greyhawk Gazetteer</i>
+            </div>
+        </div>
+        <div class="section-divider">§</div>
+
+        <p class="center" style="font-size: 10pt; letter-spacing: 2px; margin-bottom: 0.5rem;">THE FANTASTICAL</p>
+        <div style="text-align: center; margin: 1rem 0 1rem;">
+            <span style="letter-spacing: 8px; font-size: 1.4rem;">VEIL</span><br>
+            <span style="font-size: 0.9rem;">OF</span><br>
+            <span style="letter-spacing: 8px; font-size: 1.4rem;">LUNACY</span>
+        </div>
+        <p class="comedy-subtitle">A comedy concerning the demise of a real fantasy world</p>
+        <p class="center" style="margin-top: 1.2rem;">by Boyd Barnes</p>
+        <div class="section-divider">§</div>
+
+        <p class="no-indent" style="margin-top: 1.8rem;">
+            <i>The freedom permitted by romances of chivalry allows the author to be
+            epic, lyrical, tragic, and comic, with all the qualities that are contained
+            in the sweet and pleasant arts of poetry and oratory—for epic can be written
+            in prose as well as in verse.</i>
+        </p>
+        <p class="no-indent" style="text-align: right;">
+            — Cervantes, <i>Don Quixote</i> XLVII
+        </p>
+        <div class="section-divider">§</div>
+
+        <p class="center" style="font-weight: 500; letter-spacing: 1px;">
+            [READER, START HERE]
+        </p>
+
+        <p class="center publisher-imprint">
+            Nlessie’s Old Books, Molag<br>is pleased to publish
+        </p>
+        <p class="center" style="font-size: 1.0rem; margin-top: 0.5rem;">A HISTORY</p>
+        <p class="center">OF</p>
+        <p class="center" style="font-size: 1.0rem;">THE VEIL OF LUNACY</p>
+        <p class="center subtitle-italic">
+            Or, the Life and Works of the Canon of Veluna from Ancient to Present Times
+        </p>
+        <div class="credits-small">
+            <div class="credits-name">by Annalo Bifurcati, UADP, GNGH</div>
+            <div class="credits-details">
+                Professor of History and Master of the Archives of the Museum of Nyr Dyv
+                Antiquities, Olde Maurian College, Nyrstran, Duchy of Urnst<br>
+                <i>as edited by nine august scholars</i><br>
+                DXCI
+            </div>
+            <div class="section-divider">§</div>
+        </div>
 
 <!-- main content wrapper -->
 <div class="main-content">
