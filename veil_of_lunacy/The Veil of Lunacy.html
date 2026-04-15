@@ -4,9 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Veil of Lunacy: a novel by Boyd Barnes</title>
+    <!-- Bootstrap 5 CSS (required for navbar, offcanvas, toggler) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons (optional) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <style>
-        /* ---------- RESET & GLOBAL ---------- */
-        body {
+        /* ---------- RESET & GLOBAL (preserve original typography) ---------- */
+        * {
             box-sizing: border-box;
         }
 
@@ -31,12 +35,19 @@
             line-height: 1.5;
             color: #1e2a2e;
             background-color: #fefaf5;
-            padding: 2rem 1.5rem;
-            max-width: 1200px;
-            margin: 0 auto;
+            padding: 0;
+            margin: 0;
         }
 
-        /* Main container with pleasant reading width (~6in / 38em) */
+        /* main content area: accounts for fixed-top navbar */
+        .main-content {
+            padding-top: 85px;
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: #fefaf5;
+        }
+
+        /* Original container style (reading width ~42rem) */
         .document-container {
             max-width: 42rem;
             margin: 0 auto;
@@ -54,23 +65,19 @@
             line-height: 1.55;
         }
 
-        /* Indented paragraph (first-line indent) */
         .indent {
             text-indent: 2em;
         }
 
-        /* No indent */
         .no-indent {
             text-indent: 0;
         }
 
-        /* Centered text */
         .center {
             text-align: center;
             text-indent: 0;
         }
 
-        /* Blockquote styling (elegant, subtle) */
         blockquote {
             margin: 1.5em 1.8em;
             padding: 0.6em 0 0.6em 1.5em;
@@ -88,7 +95,6 @@
             margin-bottom: 0;
         }
 
-        /* Section dividers (ornamental) */
         .section-divider {
             text-align: center;
             margin: 2rem 0 1.5rem;
@@ -97,7 +103,6 @@
             color: #b58b6b;
         }
 
-        /* Headings */
         h1, h2, h3, h4 {
             font-weight: 500;
             margin: 1.5em 0 0.75em;
@@ -138,7 +143,6 @@
             font-weight: 500;
         }
 
-        /* Special typography for publisher imprint */
         .publisher-imprint {
             font-size: 10pt;
             text-align: center;
@@ -170,7 +174,6 @@
             text-align: center;
         }
 
-        /* Illustration / caption styling */
         .illustration {
             text-align: center;
             margin: 2rem 0;
@@ -189,7 +192,7 @@
             text-align: center;
         }
 
-        /* Footnotes (hover tooltip style) */
+        /* footnote styles */
         .footnote-ref {
             display: inline-block;
             vertical-align: super;
@@ -243,7 +246,6 @@
             opacity: 1;
         }
 
-        /* Traditional footnotes section (endnotes) */
         .footnotes-section {
             margin-top: 3rem;
             padding-top: 1.5rem;
@@ -269,7 +271,6 @@
             font-variant: small-caps;
         }
 
-        /* Style for italicized h4 section */
         .italic-section {
             font-style: italic;
         }
@@ -280,7 +281,6 @@
             font-style: italic;
         }
 
-        /* Indent paragraphs under h3 and h4 for hierarchy */
         .h3-section p,
         .h3-section > div:not(.h4-section) p,
         .h4-section p {
@@ -291,7 +291,6 @@
             margin-left: 0;
         }
 
-        /* Speech styling for the Grey College Chapel address */
         .speech-name {
             font-size: 12pt;
             text-align: left;
@@ -315,7 +314,6 @@
             margin-top: 1em;
         }
 
-        /* Hanging indent for character list */
         .character-entry {
             margin-left: 1.2rem;
             text-indent: -1.2rem;
@@ -323,9 +321,131 @@
             line-height: 1.5;
         }
 
-        @media (max-width: 560px) {
-            body {
-                padding: 1rem;
+        /* ---------- FIXED TOP NAVBAR STYLES (fully functional) ---------- */
+        .navbar.fixed-top {
+            background-color: #2d3e40 !important;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            padding: 0.5rem 1rem;
+            border-bottom: 1px solid #c0a88a;
+        }
+
+        .navbar-brand,
+        .navbar-nav .nav-link {
+            color: #fefaf5 !important;
+            font-family: 'Yu Gothic Medium', 'Segoe UI', Georgia, serif;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+        }
+        .navbar-brand:hover,
+        .navbar-nav .nav-link:hover {
+            color: #f0dbc0 !important;
+        }
+
+        .navbar .map-link {
+            color: #fefaf5;
+            text-decoration: none;
+            margin-left: 1rem;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: color 0.2s;
+            border-left: 1px solid rgba(255,245,225,0.4);
+            padding-left: 1rem;
+        }
+        .navbar .map-link:hover {
+            color: #f0dbc0;
+        }
+
+        .navbar-toggler {
+            border-color: rgba(255,245,225,0.6);
+        }
+
+        /* OFF CANVAS SIDEBAR STYLES — FULLY VISIBLE LIST ITEMS */
+        .offcanvas {
+            background-color: #fffef7;
+            font-family: 'Yu Gothic Medium', 'Segoe UI', serif;
+            color: #1e2a2e;
+            border-left: 1px solid #e2d5c4;
+            width: 320px;
+        }
+        .offcanvas-header {
+            border-bottom: 1px solid #e9e0d4;
+            background-color: #fdf9f2;
+        }
+        .offcanvas-title {
+            color: #2d3e40;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        .offcanvas-body {
+            padding: 1rem 1rem 2rem 1rem;
+        }
+        .offcanvas-body .navbar-nav {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            padding-left: 0;
+            margin-bottom: 0;
+            list-style: none;
+        }
+        .offcanvas-body .navbar-nav .nav-item {
+            display: block;
+            margin-bottom: 0.35rem;
+            width: 100%;
+        }
+        .offcanvas-body .navbar-nav .nav-link {
+            display: block;
+            color: #2d3e40 !important;
+            background-color: transparent;
+            text-decoration: none;
+            font-size: 0.9rem;
+            padding: 0.4rem 0.5rem 0.4rem 0.8rem;
+            border-left: 2px solid transparent;
+            transition: all 0.15s ease;
+            font-weight: 500;
+            white-space: normal;
+            word-break: break-word;
+        }
+        .offcanvas-body .navbar-nav .nav-link:hover {
+            border-left-color: #b58b6b;
+            background-color: #fef6ed;
+            color: #6b4c2c !important;
+            padding-left: 1rem;
+        }
+        .offcanvas-body .d-flex {
+            margin-bottom: 1.5rem;
+        }
+        .offcanvas-body .form-control {
+            border: 1px solid #d9cdbc;
+            background: #ffffff;
+            border-radius: 30px;
+        }
+        .offcanvas-body .btn-outline-success {
+            color: #6f5e4a;
+            border-color: #c0a88a;
+        }
+        .offcanvas-body .btn-outline-success:hover {
+            background-color: #c0a88a;
+            color: white;
+        }
+        .offcanvas-body hr {
+            margin: 1rem 0;
+            border-color: #e2d5c4;
+        }
+        .offcanvas-body .mobile-quick-links a {
+            color: #2d3e40;
+            text-decoration: none;
+            font-weight: 500;
+            margin-right: 1rem;
+            font-size: 0.85rem;
+        }
+        .offcanvas-body .mobile-quick-links a:hover {
+            color: #8b6946;
+        }
+
+        /* responsiveness adjustments */
+        @media (max-width: 576px) {
+            .main-content {
+                padding-top: 75px;
             }
             .document-container {
                 padding: 1rem;
@@ -334,12 +454,20 @@
                 margin: 1.2em 0.8em;
                 padding-left: 1em;
             }
-            .footnote-ref .footnote-tooltip {
-                min-width: 220px;
-                max-width: 260px;
-                font-size: 0.7rem;
-                bottom: 1.6em;
+            .navbar-brand {
+                font-size: 1rem;
             }
+            .navbar .map-link {
+                font-size: 0.8rem;
+                margin-left: 0.5rem;
+                padding-left: 0.5rem;
+            }
+            .offcanvas {
+                width: 85%;
+            }
+        }
+
+        @media (max-width: 560px) {
             .h3-section > p,
             .h3-section > div:not(.h4-section) > p,
             .h4-section p {
@@ -351,28 +479,131 @@
             }
         }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
-<div class="document-container">
 
-    <!-- ==================== H1 SECTION: TITLE PAGES THE VEIL OF LUNACY ================= -->
-    <div class="h1-section">
+<!-- ========== FIXED TOP NAVBAR (fully functional collapsible offcanvas) ========== -->
+    <nav class="navbar fixed-top bg-body-secondary">
+        <div class="container-fluid">
+            <!-- Brand -->
+            <a class="navbar-brand" href="#">The Veil of Lunacy</a>
+
+            <!-- Desktop inline links (visible on medium screens and up) -->
+            <div class="d-none d-md-flex align-items-center">
+                <a href="#fantasy-references" class="map-link">The Fantasy World</a>
+                <a class="map-link" href="https://www.annabmeyer.com/576cy-easyzoom/" target="_blank">🗺️ Map - Anna B Meyer</a>
+            </div>
+
+            <!-- Toggler button for offcanvas (right side collapsible menu) -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+    </nav>
+
+<!-- OFF CANVAS COMPONENT — all nav items now display correctly as a vertical list -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Contents & Navigation</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <!-- Search form (demo) -->
+            <form class="d-flex mt-0 mb-3" role="search" onsubmit="event.preventDefault(); alert('Search demo: ' + this.searchInput.value);">
+                <input class="form-control me-2" type="search" placeholder="Search chapters..." aria-label="Search" id="searchInput">
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
+
+            <!-- Complete navigation list: each <li class="nav-item"> contains visible text and link -->
+            <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                <li class="nav-item"><a class="nav-link" href="#title-pages">Title pages</a></li>
+                <li class="nav-item"><a class="nav-link" href="#scena1-leukish">Scenario 1 - Leukish and the Bandit Plains</a></li>
+                <li class="nav-item"><a class="nav-link" href="#ch1-disputations">Ch 1 - The Leukish Disputations</a></li>
+                <li class="nav-item"><a class="nav-link" href="#ch2-shieldlands">Ch 2 - The Bandit Kingdoms, etc.</a></li>
+                <li class="nav-item"><a class="nav-link" href="#interlude-lawsforge">Interlude - Law's Forge</a></li>
+                <li class="nav-item"><a class="nav-link" href="#scena2-monstrous">Scenario 2 - The monstrous continent</a></li>
+                <li class="nav-item"><a class="nav-link" href="#ch3-natureofmonstrosity">Ch 3 - The nature of monstrosity</a></li>
+                <li class="nav-item"><a class="nav-link" href="#ch4-originofhumanoids">Ch 4 - The Origin of Humanoids</a></li>
+                <li class="nav-item"><a class="nav-link" href="#ch5-howflanaesswon">Ch 5 - How the Flanaess was won</a></li>
+                <li class="nav-item"><a class="nav-link" href="#episodevi-monsterwars">Ep VI. Monster Wars: "Return of the Redeye"</a></li>
+                <li class="nav-item"><a class="nav-link" href="#interlude-necromonium">Interlude - In the Necromonium</a></li>
+                <li class="nav-item"><a class="nav-link" href="#ch7-fellcity">Ch 7 - The fell city</a></li>
+                <li class="nav-item"><a class="nav-link" href="#ch8-evilamong">Ch 8 - Evil among the historians</a></li>
+                <li class="nav-item"><a class="nav-link" href="#ch9-banditnation">Ch 9 - The bandit nation</a></li>
+                <li class="nav-item"><a class="nav-link" href="#ch10-hornedsociety">Ch 10 - The Horned Society, etc.</a></li>
+                <li class="nav-item"><a class="nav-link" href="#interlude-paragons">Interlude - "Paragons of War"</a></li>
+                <li class="nav-item"><a class="nav-link" href="#scena3-valeofluna">Scenario 3 - The Vale of Luna</a></li>
+                <li class="nav-item"><a class="nav-link" href="#ch11-crookofrao">Ch 11 - The <i>Crook of Rao</i>, etc.</a></li>
+                <li class="nav-item"><a class="nav-link" href="#ch12-highcanonnot">Ch 12 - The High Canon of Rao, etc.</a></li>
+                <li class="nav-item"><a class="nav-link" href="#ch13-secularrulers">Ch 13 - The secular rulers of Voll</a></li>
+                <li class="nav-item"><a class="nav-link" href="#ch14-valeofluna">Ch 14 - The Vale of Luna</a></li>
+                <li class="nav-item"><a class="nav-link" href="#interlude-greycollege">Interlude - At Grey College Chapel</a></li>
+                <li class="nav-item"><a class="nav-link" href="#monologe-partytocontract">Monologue - A party to the contract</a></li>
+                <li class="nav-item"><a class="nav-link" href="#inter-mission">Intermission</a></li>
+                <li class="nav-item"><a class="nav-link" href="#listofcharacters">List of characters</a></li>
+                <li class="nav-item"><a class="nav-link" href="#scena4-veluna">Scenario 4 - Veluna</a></li>
+                <li class="nav-item"><a class="nav-link" href="#ch15-adventofveluna">Ch 15 - The advent of Veluna</a></li>
+                <li class="nav-item"><a class="nav-link" href="#ch16-moralcompass">Ch 16 - The moral compass</a></li>
+                <li class="nav-item"><a class="nav-link" href="#ch17-nativityofveluna">Ch 17 - The nativity of Veluna</a></li>
+                <li class="nav-item"><a class="nav-link" href="#inter-regnum">Interregnum</a></li>
+                <li class="nav-item"><a class="nav-link" href="#ch18-unifiedkingdom">Ch 18 - The Unified Kingdom</a></li>
+                <li class="nav-item"><a class="nav-link" href="#ch19-treatyofreymend">Ch 19 - Romance and the Treaty of Reymend</a></li>
+                <li class="nav-item"><a class="nav-link" href="#ch20-wilnapummenford">Ch 20 - Wilna Pummenford</a></li>
+                <li class="nav-item"><a class="nav-link" href="#scena5-velunaandfuryondy">Scenario 5 - Veluna and Furyondy</a></li>
+                <li class="nav-item"><a class="nav-link" href="#ch21-returntoshortwar">Ch 21 - Return to the Short War</a></li>
+                <li class="nav-item"><a class="nav-link" href="#ch22-eademerconcordat">Ch 22 - The Eademer Concordat</a></li>
+                <li class="nav-item"><a class="nav-link" href="#interlude-highmooninn">Interlude: The High Moon Inn, etc.</a></li>
+                <li class="nav-item"><a class="nav-link" href="#ch23-tranquilitycollege">Ch 23 - Tranquility College</a></li>
+                <li class="nav-item"><a class="nav-link" href="#scena6-troubledsixthcentury">Scenario 6 - The troubled sixth century</a></li>
+                <li class="nav-item"><a class="nav-link" href="#ch24-tranquilitymovement">Ch 24 - The Tranquility movement, etc.</a></li>
+                <li class="nav-item"><a class="nav-link" href="#interlude-highmoonencore">Interlude - The High Moon Inn encore, etc.</a></li>
+                <li class="nav-item"><a class="nav-link" href="#ch25-thrommelsdisappearance">Ch 25 - Prince Thrommel's disappearance</a></li>
+                <li class="nav-item"><a class="nav-link" href="#ch26-warevilannexation">Ch 26 - War, evil, annexation, etc.</a></li>
+                <li class="nav-item"><a class="nav-link" href="#interlude-classdismissed">Interlude - Class dismissed</a></li>
+                <li class="nav-item"><a class="nav-link" href="#scena7-verbobonc">Scenario 7 - Verbobonc</a></li>
+                <li class="nav-item"><a class="nav-link" href="#ch27-historyknightsverbobonc">Ch 27 - The history . . . of Verbobonc</a></li>
+                <li class="nav-item"><a class="nav-link" href="#fin-ale">Finale</a></li>
+                <li class="nav-item"><a class="nav-link" href="#epilogue-nightoldemaurian">Epilogue - A night at Olde Maurian</a></li>
+                <li class="nav-item"><a class="nav-link" href="#postscript1-interviewpriestess">Postscript 1 - Interview with the priestess</a></li>
+                <li class="nav-item"><a class="nav-link" href="#postscript2-romanticbaysstop">Postscript 2 - Romantic Bay's Stop</a></li>
+                <li class="nav-item"><a class="nav-link" href="#postscript3-divergentunderground">Postscript 3 - The Divergent Underground</a></li>
+                <li class="nav-item"><a class="nav-link" href="#postscript4-valeofluna">Postscript 4 - The Vale of Luna</a></li>
+                <li class="nav-item"><a class="nav-link" href="#fantasy-references">Fantasy references</a></li>
+                <li class="nav-item"><a class="nav-link" href="#end-notes">Endnotes</a></li>
+            </ul>
+            
+            <!-- extra divider and mobile quick links -->
+            <hr>
+            <div class="mobile-quick-links d-md-none">
+                <a href="#fantasy-references">✨ Fantasy World</a>
+                <a href="https://www.annabmeyer.com/576cy-easyzoom/" target="_blank">🗺️ Map (Anna B Meyer)</a>
+            </div>
+        </div>
+    </div>
+
+<!-- main content wrapper -->
+<div class="main-content">
+    <header>
+        <h1 class="text-center" style="margin-top: 0;">The Veil of Lunacy</h1>
+    </header>
+<div class="document-container">
+    <!-- ==================== H1 SECTION: TITLE PAGES ================= -->
+    <div class="h1-section" id="title-pages">
         <h1>THE VEIL OF LUNACY</h1>
-        <!-- REVISED: inline style font-size 1.1rem (approx 16pt) → 0.95rem (approx 14pt) -->
         <p class="center" style="font-size: 0.95rem; margin-top: -0.5rem;">a novel</p>
         <div class="section-divider">§</div>
 
         <div class="illustration">
-        <img src="Halga, from LGG p 60.jpg"
-            alt="Halga, Iuz, and Null at play"
-            style="max-width:100%; border-radius:6px;">
+            <img src="Halga, from LGG p 60.jpg"
+                alt="Halga, Iuz, and Null at play"
+                style="max-width:100%; border-radius:6px;">
             <div class="fig-caption">
                 Illustration from <i>The Living Greyhawk Gazetteer</i>
             </div>
         </div>
         <div class="section-divider">§</div>
 
-        <!-- REVISED: inline style font-size 12pt → 10pt -->
         <p class="center" style="font-size: 10pt; letter-spacing: 2px; margin-bottom: 0.5rem;">THE FANTASTICAL</p>
         <div style="text-align: center; margin: 1rem 0 1rem;">
             <span style="letter-spacing: 8px; font-size: 1.4rem;">VEIL</span><br>
@@ -401,7 +632,6 @@
         <p class="center publisher-imprint">
             Nlessie’s Old Books, Molag<br>is pleased to publish
         </p>
-        <!-- REVISED: inline style font-size 1.2rem → 1.0rem -->
         <p class="center" style="font-size: 1.0rem; margin-top: 0.5rem;">A HISTORY</p>
         <p class="center">OF</p>
         <p class="center" style="font-size: 1.0rem;">THE VEIL OF LUNACY</p>
@@ -416,8 +646,10 @@
                 <i>as edited by nine august scholars</i><br>
                 DXCI
             </div>
-        <div class="section-divider">§</div>
+            <div class="section-divider">§</div>
         </div>
+    
+    
     </div>
 
     <!-- ========== H2 nested under H1: SCENARIO ONE ========== -->
@@ -17910,9 +18142,10 @@
             </p>
             <p>
                 <i>◒Bifolium◓</i>: LGG p 129-32, 181-82.
-            </p>
-            
+            </p>    
             <div class="section-divider">§</div>
+        </div>
+    </div>
     <!-- Footnotes -->
     <div class="footnotes-section">
         <p>ENDNOTES</p>
@@ -18079,6 +18312,7 @@
             </li> 
         </ol>
     </div>
+</div>
 </div>
 </body>
 </html>
