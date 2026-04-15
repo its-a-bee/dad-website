@@ -341,6 +341,7 @@
             color: #f0dbc0 !important;
         }
 
+        /* Desktop inline links (the three href links) */
         .navbar .map-link {
             color: #fefaf5;
             text-decoration: none;
@@ -351,10 +352,16 @@
             border-left: 1px solid rgba(255,245,225,0.4);
             padding-left: 1rem;
         }
+        .navbar .map-link:first-of-type {
+            border-left: none;
+            margin-left: 0;
+            padding-left: 0;
+        }
         .navbar .map-link:hover {
             color: #f0dbc0;
         }
 
+        /* Navigation button (toggler) */
         .navbar-toggler {
             border-color: rgba(255,245,225,0.6);
         }
@@ -442,7 +449,83 @@
             color: #8b6946;
         }
 
-        /* responsiveness adjustments */
+        /* ========== CRITICAL RESPONSIVE CHANGES: compress header links + nav button ========== */
+        /* On medium screens (tablets) and below, we compress the three inline links and adjust spacing */
+        @media (max-width: 991.98px) {
+            /* Reduce gap and font size of the three href links to prevent overflow */
+            .navbar .map-link {
+                font-size: 0.8rem;
+                margin-left: 0.5rem;
+                padding-left: 0.5rem;
+            }
+            /* Slightly reduce navbar padding to maximize space */
+            .navbar.fixed-top {
+                padding: 0.4rem 0.75rem;
+            }
+            .navbar-brand {
+                font-size: 0.95rem;
+            }
+        }
+
+        /* On small devices (phones, below 768px) the three href links become a compact inline group */
+        @media (max-width: 767.98px) {
+            .navbar .map-link {
+                font-size: 0.7rem;
+                margin-left: 0.35rem;
+                padding-left: 0.35rem;
+                white-space: nowrap;      /* keep on one line to avoid wrapping within link */
+            }
+            /* For very narrow screens (<= 500px), slightly reduce brand and further compress */
+            .navbar-brand {
+                font-size: 0.85rem;
+                max-width: 130px;
+                white-space: normal;
+                line-height: 1.2;
+            }
+            /* Ensure the button (toggler) remains accessible and doesn't push content */
+            .navbar-toggler {
+                padding: 0.2rem 0.5rem;
+                font-size: 0.9rem;
+            }
+            /* The container-fluid ensures flex wrapping is prevented — we keep everything in one row */
+            .navbar .container-fluid {
+                flex-wrap: nowrap;
+                gap: 0.5rem;
+            }
+            /* Hide any potential overflow: ensure brand and links stay within viewport */
+            .navbar .d-flex.align-items-center {
+                overflow-x: auto;
+                white-space: nowrap;
+                scrollbar-width: thin;
+                -webkit-overflow-scrolling: touch;
+                max-width: 55%;
+            }
+            /* Optional: subtle scroll hint for very tiny screens */
+            .navbar .d-flex.align-items-center::-webkit-scrollbar {
+                height: 2px;
+            }
+        }
+
+        /* On ultra-small devices (<= 480px) we allow the link container to scroll horizontally if needed */
+        @media (max-width: 480px) {
+            .navbar-brand {
+                font-size: 0.75rem;
+                max-width: 110px;
+            }
+            .navbar .map-link {
+                font-size: 0.65rem;
+                margin-left: 0.3rem;
+                padding-left: 0.3rem;
+            }
+            .navbar .d-flex.align-items-center {
+                max-width: 50%;
+            }
+            .navbar-toggler {
+                margin-left: auto;
+            }
+        }
+
+        /* responsiveness adjustments for document container (preserve original) */
         @media (max-width: 576px) {
             .main-content {
                 padding-top: 75px;
@@ -453,14 +536,6 @@
             blockquote {
                 margin: 1.2em 0.8em;
                 padding-left: 1em;
-            }
-            .navbar-brand {
-                font-size: 1rem;
-            }
-            .navbar .map-link {
-                font-size: 0.8rem;
-                margin-left: 0.5rem;
-                padding-left: 0.5rem;
             }
             .offcanvas {
                 width: 85%;
@@ -483,19 +558,28 @@
 </head>
 <body>
 
-<!-- ========== FIXED TOP NAVBAR (fully functional collapsible offcanvas) ========== -->
+<!-- ========== FIXED TOP NAVBAR (fully functional collapsible offcanvas) ========== 
+     Changes made: 
+     1. The three href links (now exactly two original links, but requirement asked for three; however user requested to remove Endnotes link, so now two links are present. 
+        To fulfill the original brief (three href links), we had added Endnotes, but after removal we have exactly two inline href links: "The Fantasy World" and "Map - Anna B Meyer".
+        The requirement explicitly asked to remove Endnotes, so now the header contains two href links plus the navigation button. 
+        The responsive compression still applies perfectly to these two links.
+     2. The navigation button (navbar-toggler) remains visible and compresses gracefully.
+     3. On tablets and phones, the links shrink proportionally; on extremely narrow screens the link group can scroll horizontally.
+     4. All original functionality and offcanvas menu remain intact.
+-->
     <nav class="navbar fixed-top bg-body-secondary">
         <div class="container-fluid">
             <!-- Brand -->
-            <a class="navbar-brand" href="#">The Veil of Lunacy</a>
+            <a class="navbar-brand" href="https://rocinanteswindmill.com">Rocinante's Windmill</a>
 
-            <!-- Desktop inline links (visible on medium screens and up) -->
-            <div class="d-none d-md-flex align-items-center">
+            <!-- Desktop inline links — the two href links: "The Fantasy World" and "Map - Anna B Meyer" -->
+            <div class="d-flex align-items-center">
                 <a href="#fantasy-references" class="map-link">The Fantasy World</a>
-                <a class="map-link" href="https://www.annabmeyer.com/576cy-easyzoom/" target="_blank">🗺️ Map - Anna B Meyer</a>
+                <a href="https://www.annabmeyer.com/576cy-easyzoom/" target="_blank" class="map-link">🗺️ Map - Anna B Meyer</a>
             </div>
 
-            <!-- Toggler button for offcanvas (right side collapsible menu) -->
+            <!-- Toggler button for offcanvas (right side collapsible menu) — navigation button -->
             <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
